@@ -5,12 +5,12 @@ from requests.exceptions import RequestException
 import json
 
 def get_prefix(Bot, message):
-    with open('prefixes.json','r') as f:
+    with open ('prefixes.json','r') as f:
         prefixes = json.load(f)
 
     return prefixes[str(message.guild.id)]
 
-bot = commands.Bot(command_prefix= get_prefix)
+bot = commands.Bot(command_prefix= '_') #get_prefix
 bot.remove_command('help')
 
 @bot.event
@@ -45,6 +45,7 @@ async def prefix(ctx, prefix='-'):
     
 
     with open ('prefixes.json', 'r') as f:
+
         prefixes = json.load(f)
 
     prefixes[str(ctx.guild.id)] = prefix
@@ -57,8 +58,7 @@ async def prefix(ctx, prefix='-'):
 
 
     await ctx.send(embed=embed)
-    print('command run: prefix')
-    
+
 @prefix.error
 async def prefix_handler(self, ctx, error):
   if isinstance(error, commands.errors.MissingPermissions):
@@ -66,7 +66,6 @@ async def prefix_handler(self, ctx, error):
             embed.add_field(name='**Technical**', value=f'Terminal returned error `{error}`')
 
             await ctx.send(embed=embed)
-            print('command run: prefix with output not authorized')
 
 @bot.command(case_insensitive= True)
 async def inspire(ctx):
@@ -81,22 +80,19 @@ async def inspire(ctx):
     except RequestException:
         
         await ctx.send('Inspirobot is broken, we have no reason to live.')
-print('command run: inspire')
-          
+
 @bot.command(case_insensitive= True)
 async def info(ctx):
     embed = discord.Embed(title='congrats on finding this little easter egg i have hidden!', description='Here is a little info that you may want to know about the bot', color=0x00FF00)
-    embed.add_field(name='Author:', value='By Andrew Wiltshire')
-
-    embed.add_field(name='Server count:', value=f'{len(bot.guilds)}')
-    embed.add_field(name='Invite:', 
-        value='https://discord.com/oauth2/authorize?client_id=741295925196095548&scope=bot&permissions=1544027351')
+    embed.add_field(name='**Author:**', value='By Andrew Wiltshire')
+    embed.add_field(name='**Server count:**', value=f'{len(bot.guilds)}')
+    embed.add_field(name='**Invite:**', value='https://discord.com/oauth2/authorize?client_id=741295925196095548&scope=bot&permissions=1544027351')
+    embed.add_field(name= '**credits:**', value= f'\nFelipe\nRahul')
     embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
-
-    embed.add_field(name= 'credits:', value= 'Felipe, ' + 'Rahul')
     await ctx.send(embed=embed)
-    print('command run: info')
+
+
 
 @bot.command(case_insensitive= True)
 async def help(ctx):
@@ -111,7 +107,6 @@ async def help(ctx):
     embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
     await ctx.send(embed=embed)
-    print('command run: help')
     
 @bot.command(case_insensitive= True)
 async def clear(ctx, purgeamount=0):
@@ -121,7 +116,6 @@ async def clear(ctx, purgeamount=0):
         embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
         await ctx.send(embed=embed)
-        print('command run: clear with output ammount not specified')
     elif purgeamount > 250:
         embed = discord.Embed(title= 'Invalid command!', description='250 is the max ammount of messages you can delete!', color=0xff0000)
         embed.add_field(name='example:', value='-clear 50')
@@ -129,11 +123,9 @@ async def clear(ctx, purgeamount=0):
         embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
         await ctx.send(embed=embed)
-        print('command run: clear with output too high')
     else:
         await ctx.channel.purge(limit=purgeamount)
-        print('command run: clear with output success')
-              
+
 @bot.command(case_insensitive= True)
 async def invite(ctx):
     embed = discord.Embed(title= 'Invite Link', description='Here is an invite link so you can invite this bot to your own servers', color=0x00FF00)
@@ -141,21 +133,20 @@ async def invite(ctx):
     embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
     await ctx.send(embed=embed)
-    print('command run: invite')
+
 @bot.command()
 async def _Debug_Log_(ctx, DebugMessage='No value specified'): 
     await ctx.send(f'sent {DebugMessage} to console')
     print(f'a user has sent a message to console: {DebugMessage}')
-    
 
 @bot.command(case_insensitive= True)
-async def embed(ctx, title='not specified', description='not specified', fieldName='not specified', fieldValue='not specified', color='0x7289da'):
-    embed = discord.Embed(title= title, description= description, color= color)
+
+async def embed(ctx, title='not specified', description='not specified', fieldName='not specified', fieldValue='not specified'):
+    embed = discord.Embed(title= title, description= description, color= 0x7289da)
     embed.add_field(name= fieldName, value= fieldValue)
     embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
     await ctx.send(embed=embed)
-    print('command run: embed')
 
 @bot.command(case_insensitive= True)
 async def announce(ctx, channel= 'b6e67l67l67e7del6p67673he67n35656eisb76ae8787', message= 'b6e67l67l67e7del6p67673he67n35656eisb76ae8787', recipients= "@everyone"):
@@ -165,19 +156,15 @@ async def announce(ctx, channel= 'b6e67l67l67e7del6p67673he67n35656eisb76ae8787'
         embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
         await ctx.send(embed=embed)
-        print('command run: announce with output channel not specified')
     elif message  == 'b6e67l67l67e7del6p67673he67n35656eisb76ae8787':
         embed = discord.Embed(title= 'Invalid command!', description='you must specify a message to send!', color=0xff0000)
         embed.add_field(name='example:', value='`-announce 123456789105 "this is a test message lmao" @everyone @here @dispal"`')
         embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
 
         await ctx.send(embed=embed)
-        print('command run:announce with output message not specified')
     else:
         channel = bot.get_channel(channel)
         await channel.send(f'{ctx.Author} wanted to announce to {recipients}: \n {message}')
         embed.set_author(name=ctx.author, icon_url=ctx.message.author.avatar_url)
-        print('command run: announce with output success')
-        
 
-bot.run('Try to steal my token and i will bash your fucking head in you fucking normie ass bitch ass ho')
+bot.run('NzQxMjk1OTI1MTk2MDk1NTQ4.Xy1foQ.hoNa8HwWsluJbVEnOoF0alo6cnw')
